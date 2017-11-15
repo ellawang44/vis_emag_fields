@@ -12,7 +12,7 @@ parser.add_option('-f', '--file', type = 'string', dest = 'file', help = 'Reads 
 # draw different graphs
 parser.add_option('--e_vector', action = 'store_true', dest = 'e_vector', help = 'Draw electric vector field.')
 parser.add_option('--e_field', action = 'store_true', dest = 'e_field', help = 'Draw electric field.')
-# lol good luck
+# changing grid size, input should look something like:
 # 15 15 1 10 10 1 15 15 1
 parser.add_option('-g', '--grid', type = 'string', dest = 'grid', help = 'Input render grid.')
 # number of field lines to render
@@ -35,6 +35,7 @@ with open('data/' + name + '.csv') as f:
         charge.append(float(row[0]))
         pos.append((float(row[1]), float(row[2]), float(row[3])))
 
+# changes grid size
 if options.grid:
     grid = options.grid.split()
     grid = [float(i) for i in grid]
@@ -46,7 +47,7 @@ else:
     y_grid = np.arange(-10, 11, 1)
     z_grid = np.arange(-10, 11, 1)
 
-# oh god
+# create 3D array that stores the field
 x_field = []
 y_field = []
 z_field = []
@@ -78,39 +79,12 @@ x_field = np.array(x_field)
 y_field = np.array(y_field)
 z_field = np.array(z_field)
 
-# but I like my code better :C
-'''
-x_grid = np.array(x_grid,dtype='float')
-y_grid = np.array(x_grid,dtype='float')
-z_grid = np.array(x_grid,dtype='float')
-
-px_mesh, py_mesh, pz_mesh = np.meshgrid(x_grid, y_grid, z_grid)
-px_field = np.zeros_like(px_mesh)
-py_field = np.zeros_like(py_mesh)
-pz_field = np.zeros_like(pz_mesh)
-
-for x_i, x_val in enumerate(x_grid):
-    for y_i, y_val in enumerate(y_grid):
-        for z_i, z_val in enumerate(z_grid):
-            elec = np.sum(np.array([functions.e_calc(q, (x_val, y_val, z_val), p) for q, p in zip(charge, pos) if functions.e_calc(q, (x_val, y_val, z_val), p) is not None]), axis = 0)
-            if elec is None:
-                x_v = 0.
-                y_v = 0.
-                z_v = 0.
-            else:
-                x_v = (elec[0])
-                y_v =(elec[1])
-                z_v = (elec[2])
-            px_field[x_i,y_i,z_i] = x_v
-            py_field[x_i,y_i,z_i] = y_v
-            pz_field[x_i,y_i,z_i] = z_v
-'''
-
 # set number of field lines drawn
 no_lines = 5 # default
 if options.lines:
     no_lines = options.lines
 
+# draws the electric field
 if options.e_vector:
     functions.e_vector(charge, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field)
 elif options.e_field:
