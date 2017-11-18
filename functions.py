@@ -92,9 +92,12 @@ def torus(R):
     x = (R + thickness * np.cos(v)) * np.cos(u)
     y = (R + thickness * np.cos(v)) * np.sin(u)
     z = thickness * np.sin(v)
-    mplt.mesh(x, y, z, color = (0.3, 0.3, 0.3))
+    mplt.mesh(x, y, z, color = (0.2, 0.2, 0.2))
 
 def wire(ori, loc, grid):
+
+    ''' draw an infinite wire'''
+
     s = 0.5
     phi = np.linspace(0, 2*np.pi, 100)
     phi, _ = np.meshgrid(phi, phi)
@@ -114,7 +117,7 @@ def wire(ori, loc, grid):
         z, _ = np.mgrid[grid[6]:grid[7]:100j, grid[6]:grid[7]:100j]
     else:
         raise ValueError('not an allowed orientation')
-    mplt.mesh(x, y, z, color = (1, 0, 0))
+    mplt.mesh(x, y, z, color = (0.2, 0.2, 0.2))
 
 def m_calc_wire(I, ori, loc, r):
 
@@ -163,28 +166,18 @@ def m_vector_wire(ori, loc, grid, x_grid, y_grid, z_grid, x_field, y_field, z_fi
     fig.scene.x_plus_view()
     mplt.show()
 
-''' this doesn't work
-def m_field_wire(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines):
+def m_field_wire(ori, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines):
     fig = mplt.figure()
     X,Y,Z = np.meshgrid(x_grid, y_grid, z_grid, indexing = 'ij')
-    for charge, location in zip(q, pos):
+    for orientation, location in zip(ori, pos):
         # draw sphere for point charge
-        sphere(charge, location)
+        wire(orientation, location, grid)
         # draw electric field lines
-        ball = mplt.flow(X,Y,Z,x_field, y_field, z_field, figure=fig, seedtype='sphere', integration_direction='both')
-        ball.seed.widget.center = location
-        # number of field lines to integrate over
-        ball.seed.widget.theta_resolution = no_lines
-        ball.seed.widget.phi_resolution = no_lines
+        line = mplt.flow(X,Y,Z,x_field, y_field, z_field, figure=fig, seedtype='line', integration_direction='both')
         # number of integration steps
-        ball.stream_tracer.maximum_propagation = 200
-        ball.seed.widget.radius = 1
-        # dodgy hax... TL;DR widgets are dumb
-        ball.seed.widget.enabled = False
-        ball.seed.widget.enabled = True
+        line.stream_tracer.maximum_propagation = 200
     mplt.axes()
     # set view to x-axis coming out of screen
     fig.scene.x_plus_view()
     mplt.draw(figure=fig)
     mplt.show()
-    '''

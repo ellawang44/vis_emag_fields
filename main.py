@@ -111,4 +111,4 @@ elif options.e_field:
 elif options.m_vector:
     functions.m_vector_wire(orientations, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field)
 elif options.m_field:
-    functions.m_field_wire(ori, loc, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines)
+    functions.m_field_wire(orientations, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines)
