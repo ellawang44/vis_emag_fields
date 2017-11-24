@@ -4,7 +4,7 @@ import numpy as np
 from optparse import OptionParser
 import functions
 
-# adds option flags for maximum customisability
+# add option flags for maximum customisability
 parser = OptionParser()
 
 # change files
@@ -20,17 +20,20 @@ parser.add_option('-g', '--grid', type = 'string', dest = 'grid', help = 'Input 
 # number of field lines to render
 parser.add_option('--lines', type = 'int', dest = 'lines', help = 'Changes the number of field lines drawn.')
 
+# testing flag
+parser.add_option('--test', action = 'store_true', dest = 'test', help = 'testing')
+
 (options, args) = parser.parse_args()
 
 # set file name
 if options.e_vector or options.e_field:
-    name = 'pos_charge' # default
+    name = 'pos_charge' # default electric field
 elif options.m_vector or options.m_field:
-    name = 'inf_wire' # default
+    name = 'inf_wire' # default magnetic field
 if options.file:
     name = options.file
 
-# read in csv file where the charges should be defined
+# read in csv file where the charges/wires should be defined
 if options.e_vector or options.e_field:
     charge = []
     pos = []
@@ -84,6 +87,9 @@ for x in x_grid:
             # calculate magnetic field
             elif options.m_vector or options.m_field:
                 val = np.sum(np.array([functions.m_calc_wire(i, o, l, (x, y, z)) for i, o, l in zip(currents, orientations, pos)]), axis = 0)
+            # for testing purposes, remove later
+            elif options.test:
+                val = (0, 0, 0)
             # append values
             x_field_y_z.append(val[0])
             y_field_y_z.append(val[1])
@@ -112,3 +118,5 @@ elif options.m_vector:
     functions.m_vector_wire(orientations, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field)
 elif options.m_field:
     functions.m_field_wire(orientations, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines)
+elif options.test:
+    functions.rend_torus([1, 2, 3, 6, 9, 10])

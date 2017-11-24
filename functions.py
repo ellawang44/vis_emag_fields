@@ -2,8 +2,8 @@ from __future__ import division
 import numpy as np
 import mayavi.mlab as mplt
 
-ep_0 = 8.854*10**-12 # vaccumn permissitivity
-cons = 1/(4*np.pi*ep_0) # Coloumb's constant (k)
+ep_0 = 8.854 * 10**-12 # vaccumn permissitivity
+cons = 1 / (4 * np.pi * ep_0) # Coloumb's constant (k)
 mu_0 = 4 * np.pi * 10**(-7) # permeability of free space
 
 def e_calc(q, r, r_prime):
@@ -28,7 +28,7 @@ def sphere(q, pos):
 
     '''draw sphere for point charge'''
 
-    phi, theta = np.mgrid[0:np.pi:11j, 0:2*np.pi:11j]
+    phi, theta = np.mgrid[0:np.pi:11j, 0:2 * np.pi:11j]
     x = np.sin(phi) * np.cos(theta)
     y = np.sin(phi) * np.sin(theta)
     z = np.cos(phi)
@@ -40,7 +40,7 @@ def sphere(q, pos):
         c = (1, 0, 0)
     else:
         c = (0, 0, 1)
-    mplt.mesh(x + x_loc, y + y_loc, z + z_loc, color=c)
+    mplt.mesh(x + x_loc, y + y_loc, z + z_loc, color = c)
 
 def e_vector(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field):
     fig = mplt.figure()
@@ -52,6 +52,7 @@ def e_vector(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field):
     mplt.quiver3d(X, Y, Z, x_field, y_field, z_field)
     # set view to x-axis coming out of screen
     fig.scene.x_plus_view()
+    mplt.axes()
     mplt.show()
 
 def e_field(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines):
@@ -61,7 +62,7 @@ def e_field(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines)
         # draw sphere for point charge
         sphere(charge, location)
         # draw electric field lines
-        ball = mplt.flow(X,Y,Z,x_field, y_field, z_field, figure=fig, seedtype='sphere', integration_direction='both')
+        ball = mplt.flow(X, Y, Z, x_field, y_field, z_field, figure = fig, seedtype = 'sphere', integration_direction = 'both')
         ball.seed.widget.center = location
         # number of field lines to integrate over
         ball.seed.widget.theta_resolution = no_lines
@@ -75,24 +76,31 @@ def e_field(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines)
     mplt.axes()
     # set view to x-axis coming out of screen
     fig.scene.x_plus_view()
-    mplt.draw(figure=fig)
+    mplt.draw(figure = fig)
     mplt.show()
 
 def torus(R):
 
     ''' draw torus for magnetic field of coil'''
+    ''' not orientable yet, can change that in the future'''
 
     # thickness of the torus
     thickness = 1
     # polar coordinates for torus
-    u = np.linspace(0,2*np.pi,100)
-    v = np.linspace(0,2*np.pi,100)
+    u = np.linspace(0, 2 * np.pi, 100)
+    v = np.linspace(0, 2 * np.pi, 100)
     u,v = np.meshgrid(u,v)
     # convert to cartesian coordinates
     x = (R + thickness * np.cos(v)) * np.cos(u)
     y = (R + thickness * np.cos(v)) * np.sin(u)
     z = thickness * np.sin(v)
     mplt.mesh(x, y, z, color = (0.2, 0.2, 0.2))
+
+# remove this later
+def rend_torus(R_l):
+    for r in R_l:
+        torus(r)
+    mplt.show()
 
 def wire(ori, loc, grid):
 
@@ -162,8 +170,10 @@ def m_vector_wire(ori, loc, grid, x_grid, y_grid, z_grid, x_field, y_field, z_fi
     # draw vector field
     X,Y,Z = np.meshgrid(x_grid, y_grid, z_grid, indexing = 'ij')
     mplt.quiver3d(X, Y, Z, x_field, y_field, z_field)
+    mplt.axes()
     # set view to x-axis coming out of screen
     fig.scene.x_plus_view()
+    mplt.draw(figure = fig)
     mplt.show()
 
 def m_field_wire(ori, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines):
@@ -173,11 +183,11 @@ def m_field_wire(ori, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_fie
         # draw sphere for point charge
         wire(orientation, location, grid)
         # draw electric field lines
-        line = mplt.flow(X,Y,Z,x_field, y_field, z_field, figure=fig, seedtype='line', integration_direction='both')
+        line = mplt.flow(X,Y,Z,x_field, y_field, z_field, figure = fig, seedtype = 'line', integration_direction = 'both')
         # number of integration steps
         line.stream_tracer.maximum_propagation = 200
     mplt.axes()
     # set view to x-axis coming out of screen
     fig.scene.x_plus_view()
-    mplt.draw(figure=fig)
+    mplt.draw(figure = fig)
     mplt.show()

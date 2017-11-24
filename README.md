@@ -1,15 +1,15 @@
 # Visualisation Code
-Written in Python 2 using the Mayavi library (Mayavi is not well supported in Python 3 yet). Although the code has no specific Python 2 things, so it should be easily generalisable to Python 3.
+Written in Python 2 using the Mayavi library (Mayavi is not well supported in Python 3 yet). Although this code is not specific to Python 2, so it should be easily generalisable to Python 3.
 
-The charge is in Coulombs and units for distance is in metres.
+Everything is in SI units
 
 # User Input
 ## Argument flags
 ### --file
 Change input file. By default, this is a positive charge located at the origin. All files should be saved in the data folder. All files should be of type csv with the first row being front matter (the first row is ignored in the code). The input for the file argument should just be the name, no extension (csv) required.
 
-### --e_vector/e_field
-Determine which graph is drawn (vector field or field lines). If no argument is given, both plots are generated, with vector field first, once that is closed, the field line plot will be drawn.
+### --e_vector/e_field/m_vector/m_field
+Determine which graph is drawn (vector field or field lines; electric or magnetic)
 
 ### --grid
 Change grid size and distance between points within grid. By default, the grid is from -10 to 10 on all 3 axis with 1 m between each point.
