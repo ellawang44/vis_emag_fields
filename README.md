@@ -3,6 +3,8 @@ Written in Python 2 using the Mayavi library (Mayavi is not well supported in Py
 
 Everything is in SI units
 
+Future work: magnetic field around torus, electrodynamics, perhaps a Java wrapper that allows people to move things around
+
 # User Input
 ## Argument flags
 ### --file
