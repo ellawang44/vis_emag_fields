@@ -1,0 +1,4 @@
+numpy
+mayavi
+optparse
+csv

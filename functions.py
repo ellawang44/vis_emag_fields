@@ -1,5 +1,6 @@
 from __future__ import division
 import numpy as np
+from scipy import integrate
 import mayavi.mlab as mplt
 
 ep_0 = 8.854 * 10**-12 # vaccumn permissitivity
@@ -43,6 +44,9 @@ def sphere(q, pos):
     mplt.mesh(x + x_loc, y + y_loc, z + z_loc, color = c)
 
 def e_vector(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field):
+
+    ''' draw the electric vector field of a charge/charges'''
+
     fig = mplt.figure()
     # draw sphere for point charge
     for charge, location in zip(q, pos):
@@ -56,6 +60,9 @@ def e_vector(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field):
     mplt.show()
 
 def e_field(q, pos, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines):
+
+    '''draw the electric field of a charge/charges'''
+
     fig = mplt.figure()
     X,Y,Z = np.meshgrid(x_grid, y_grid, z_grid, indexing = 'ij')
     for charge, location in zip(q, pos):
@@ -96,12 +103,6 @@ def torus(R):
     z = thickness * np.sin(v)
     mplt.mesh(x, y, z, color = (0.2, 0.2, 0.2))
 
-# remove this later
-def rend_torus(R_l):
-    for r in R_l:
-        torus(r)
-    mplt.show()
-
 def wire(ori, loc, grid):
 
     ''' draw an infinite wire'''
@@ -129,7 +130,7 @@ def wire(ori, loc, grid):
 
 def m_calc_wire(I, ori, loc, r):
 
-    '''calculate magnetic field of an infinite wire'''
+    '''calculate magnetic field of an infinite wire/wires'''
 
     x = r[0]
     y = r[1]
@@ -162,9 +163,31 @@ def m_calc_wire(I, ori, loc, r):
         raise ValueError('not an allowed orientation')
     return (B_x, B_y, B_z)
 
+def m_calc_torus(I, R, ori, dis, r_prime):
+
+    '''calculate magnetic field of torus'''
+
+    # r = np.sqrt(r_tup[0]**2 + r_tup[1]**2 + r_tup[2]**2)
+    if ori == 'x':
+        return 'lol'
+    elif ori == 'y':
+        return 'plz'
+    elif ori == 'z':
+        z = r_prime[2] - dis
+        r = np.sqrt(r_prime[0]**2 + r_prime[1]**2 + z**2)
+        theta = np.arccos(z/r)
+        vector_potential(I, R, r, theta)
+        return
+    else:
+        raise ValueError('not an allowed orientation')
+    return (B_x, B_y, B_z)
+
 def m_vector_wire(ori, loc, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field):
+
+    ''' draw the magnetic vector field around an infinite wire/wires'''
+
     fig = mplt.figure()
-    # draw sphere for point charge
+    # draw current carrying wire
     for orientation, location in zip(ori, loc):
         wire(orientation, location, grid)
     # draw vector field
@@ -177,10 +200,13 @@ def m_vector_wire(ori, loc, grid, x_grid, y_grid, z_grid, x_field, y_field, z_fi
     mplt.show()
 
 def m_field_wire(ori, pos, grid, x_grid, y_grid, z_grid, x_field, y_field, z_field, no_lines):
+
+    '''draw the magnetic field around an infinite wire'''
+
     fig = mplt.figure()
     X,Y,Z = np.meshgrid(x_grid, y_grid, z_grid, indexing = 'ij')
     for orientation, location in zip(ori, pos):
-        # draw sphere for point charge
+        # draw current carrying wire
         wire(orientation, location, grid)
         # draw electric field lines
         line = mplt.flow(X,Y,Z,x_field, y_field, z_field, figure = fig, seedtype = 'line', integration_direction = 'both')
